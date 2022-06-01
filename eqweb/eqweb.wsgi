@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Jorge Morgado <jorge@morgado.ch>
+# Jorge Morgado <jorge (at) morgado (dot) ch>
 # Copyright (c)2016
 #
 

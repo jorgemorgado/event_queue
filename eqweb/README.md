@@ -4,6 +4,8 @@
 
 A "rich" web interface to the Event Queue.
 
+![Event Queue web interface](docs/eqweb.png)
+
 ## Database
 
 Refer to the the `database/struct.sql` for the database structure.

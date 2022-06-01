@@ -99,7 +99,7 @@ And finally deploy the ```check_eq_heartbeat``` on the ```eqhost``` server.
 
 ## eqweb
 
-This is a simple Event Queue web interface.
+This is a simple Event Queue web interface (see the [README](eqweb/README.md) file).
 
 ## Event Flow
 
@@ -165,3 +165,11 @@ q event methods:
 * There are many TODOs in the code.
 * Redundant queue.
 * Redundant event dispatching.
+
+## Contributors
+
+* [Jorge Morgado](https://github.com/jorgemorgado) (Author)
+
+## License
+
+Released under the [MIT License](http://www.opensource.org/licenses/MIT).
