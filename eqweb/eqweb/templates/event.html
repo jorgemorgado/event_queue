@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+{% if data -%}
+<style type="text/css">
+.nowrap {
+  white-space: nowrap;
+}
+
+.table td.td-fixed {
+  font-family: courier;
+}
+
+.icon-green {
+  color: #5CB85C;
+}
+.icon-red {
+  color: #EF0505;
+}
+</style>
+
+{% set bgtype = {
+    'PROBLEM':         'bg-danger',
+    'RECOVERY':        'bg-success',
+    'HEARTBEAT':       'bg-info',
+    'ACKNOWLEDGEMENT': 'bg-info',
+  }
+-%}
+{% set bgstate = {
+    'WARNING':  'bg-warning',
+    'CRITICAL': 'bg-danger',
+    'DOWN':     'bg-warning',
+    'UNKNOWN':  'bg-info',
+    'OK':       'bg-success',
+    'UP':       'bg-success',
+    'ACTIVE':   'bg-success',
+    'INACTIVE': 'bg-warning',
+  }
+-%}
+<div class="table-responsive">
+  <table class="table table-hover">
+    <tbody>
+      <tr>
+        <td><span class="nowrap">Generated on</span></td>
+        <td>{{ data.date }} {{ data.time }}</td>
+      </tr>
+      <tr>
+        <td><span class="nowrap">Arrived on</span></td>
+        <td>{{ data.ts }} {% if data.count > 1 -%}(seen {{ data.count }} times){% endif -%}</td>
+      </tr>
+      <tr>
+        <td><span class="nowrap">Source poller</span></td>
+        <td class="td-fixed">{{ data.source }}</td>
+      </tr>
+      <tr>
+        <td><span class="nowrap">Type / State</span></td>
+        <td><span class="{{ bgtype[data.type] }}">{{ data.type }}</span> / <span class="{{ bgstate[data.state] }}">{{ data.state }}</span></td>
+      </tr>
+      <tr>
+        <td>Handled</td>
+        <td>
+{% if data.handled == 0 -%}
+<i class="glyphicon glyphicon-remove icon-red"></i> Unhandled (0)
+{% elif data.handled == 1 -%}
+<i class="glyphicon glyphicon-remove icon-red"></i> Ignored (1)
+{% elif data.handled == 2 -%}
+<i class="glyphicon glyphicon-ok icon-green"></i> Mail (2)
+{% elif data.handled == 4 -%}
+<i class="glyphicon glyphicon-ok icon-green"></i> SMS (4)
+{% elif data.handled == 6 -%}
+<i class="glyphicon glyphicon-ok icon-green"></i> Mail and SMS (6)
+{% else -%}
+<i class="glyphicon glyphicon-question-sign text-warning"></i> Unknown
+{% endif -%}
+        </td>
+      </tr>
+{% if data.hostname -%}
+      <tr>
+        <td>Hostname</td>
+        <td class="td-fixed">{{ data.hostname }} {% if data.ipv4 -%}({{ data.ipv4 }}){% endif -%}</td>
+      </tr>
+{% endif -%}
+{% if data.servicename -%}
+      <tr>
+        <td><span class="nowrap">Service name</span></td>
+        <td>{{ data.servicename }}</td>
+      </tr>
+{% endif -%}
+{% if data.message -%}
+      <tr>
+        <td>Message</td>
+        <td>{{ data.message }}</td>
+      </tr>
+{% endif -%}
+    </tbody>
+  </table>
+</div>
+{% endif -%}
+</body>
+</html>

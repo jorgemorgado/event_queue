@@ -1,0 +1,8 @@
+*.cfg
+*.swp
+*.swo
+*.pyc
+*~
+.project
+*DS_STORE
+*.[0-9][0-9]

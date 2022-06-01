@@ -1,0 +1,28 @@
+## Event Queue WebUI configuration file
+##
+## Jorge Morgado <jorge (at) morgado (dot) ch>
+## Copyright (c)2016
+##
+
+# Settings when running with the build-in server (not WSGI)
+# PLEASE NOTE: Running an externally visible web server while in debugging
+# mode is dangerous because a user of the application can execute arbitrary
+# Python code on your computer. Either disable the debugger (below) or trust
+# the users on your network - otherwise your should only run the server
+# locally ('127.0.0.1').
+HOST = '0.0.0.0'
+PORT = 5001
+DEBUG = True
+
+# Secret key to encrypt session variables
+SECRET_KEY = '<enter some random string here>'
+
+# If result is paginated, how many items to display per page
+PER_PAGE = 50
+
+# SQL Alchemy connection URI
+SQLALCHEMY_DATABASE_URI = 'mysql://dbuser:dbpass@dbhost:3306/event'
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+# CSS framework for the pagination module
+CSS_FRAMEWORK = 'bootstrap3'

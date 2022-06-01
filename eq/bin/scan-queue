@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Where to find the q scripts
+SCRIPTS_DIR="/opt/q/scripts"
+
+# Get the current date/time to ensure all q scripts will only
+# process events that are older or equal to $DATE
+DATE=`date "+%Y-%m-%d %H:%M:%S"`
+
+for script in `ls -1 ${SCRIPTS_DIR}/*.q`; do
+    /usr/bin/q ${script} "${DATE}"
+done
+
+exit 0

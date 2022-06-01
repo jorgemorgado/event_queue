@@ -1,0 +1,33 @@
+{% extends "base.html" -%}
+{% block body -%}
+<div class="text-center">
+  <h2>Create Account</h2>
+  <form class="form-horizontal" action="{{ url_for('signup') }}" method="post">
+    <div class="form-group">
+      <label for="name" class="control-label col-md-4">Name</label>
+      <div class="col-md-4">
+        {{ form.name(maxlength=45, class="form-control", placeholder="Name", autocomplete="on", spellcheck="false", required=true, autofocus=true) }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email" class="control-label col-md-4">Email</label>
+      <div class="col-md-4">
+        {{ form.email(type="email", maxlength=45, class="form-control", placeholder="Email address", autocomplete="on", spellcheck="false", required=true, autofocus=true) }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password" class="control-label col-md-4">Password</label>
+      <div class="col-md-4">
+        {{ form.password(maxlength=50, class="form-control", placeholder="Password", autocomplete="off", spellcheck="false", required=true, autofocus=true) }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-offset-5 col-md-2">
+        {{ form.submit(class="btn btn-primary") }}
+      </div>
+    </div>
+</form>
+{% endblock -%}

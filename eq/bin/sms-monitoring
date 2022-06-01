@@ -1,0 +1,25 @@
+#!/usr/bin/q
+# -*- coding: utf-8 -*-
+#
+# Purpose: Send an SMS to the current on-call user.
+#
+# Usage: ./sms-monitoring
+#
+# Jorge Morgado <jorge (at) morgado (dot) ch>
+# Version 1.0
+# (c) 2014
+#
+
+def send_sms(phone_number, text):
+    """Try to send the SMS via SMPP and fall back to SMTP if it failed."""
+    success = q.send_sms_via_smpp(phone_number, text)
+
+    if not success:
+        q.send_sms_via_smtp(phone_number, text)
+
+
+if __name__ == '__main__':
+    text = 'Notification by SMS is working!'
+    phone_number = q.whoisoncall()
+
+    send_sms(phone_number, text)

@@ -1,0 +1,100 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# Fetch and update the on-call phone information.
+#
+# Usage: ./set-oncall-phone
+#
+# Jorge Morgado <jorge (at) morgado (dot) ch>
+# (c)2014
+#
+
+"""A simple script to fetch and update the latest on-call phone information."""
+
+__version__ = 1.0
+
+import os
+import sys
+import argparse
+import json
+import urllib2
+
+version = """%(prog)s 1.0, Copyright(c) 2014"""
+description = "Fetch and update the on-call phone information."
+
+# The API endpoint where to get the on-call information
+url = "http://whoisoncall.api/api/1.0/whoisoncall/oncall"
+proxy = ""
+
+datafile = os.path.dirname(os.path.realpath(__file__)) + "/../var/set-oncall-phone"
+
+# -----------------------------------------------------------------------------
+# -- DON'T CHANGE ANYTHING BELOW THIS LINE UNLESS YOU KNOW WHAT YOU'RE DOING --
+
+parser = argparse.ArgumentParser(description=description)
+
+parser.add_argument('-v', '--version', action='version', version=version)
+
+parser.add_argument('-d', '--debug', action='store_true', dest='debug',
+                    default=False,
+                    help='enable debug mode (developers only)',)
+
+group = parser.add_argument_group('Get options')
+
+group.add_argument('-u', '--webservice-url', type=str, dest='url',
+                   default=url,
+                   help='Web Service URL')
+
+group.add_argument('-p', '--webservice-proxy', type=str, dest='proxy',
+                   default=proxy,
+                   help='Web Service Proxy (not implemented)')
+
+group = parser.add_argument_group('Set options')
+
+group.add_argument('-f', '--data-file', type=str, dest='datafile',
+                   default=datafile,
+                   help='Where to store the on-call phone information')
+
+args = parser.parse_args()
+
+# Disable traceback if not in debug mode
+if not args.debug:
+    sys.tracebacklimit = 0
+
+
+def main():
+    try:
+        number = ''
+
+        # Fetch the JSON-encoded response from remote API
+        result = urllib2.urlopen(args.url)
+        data = json.load(result)
+
+        # Read the current phone number
+        if os.path.exists(args.datafile):
+            f = open(args.datafile, 'r')
+            number = f.read()
+            f.close()
+
+        # Write the phone number to the file if newer
+        if number != data['number']:
+            if args.debug:
+                print('New phone number found, updating')
+
+            f = open(args.datafile,'w')
+            f.write(data['number'])
+            f.close()
+        elif args.debug:
+            print('Same phone number found, ignoring')
+
+    except urllib2.URLError as e:
+        raise e
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main())
+
+    except KeyboardInterrupt:
+        print('Caught Ctrl-C.')
+        sys.exit(1)

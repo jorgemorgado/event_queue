@@ -1,0 +1,74 @@
+#!/usr/bin/q
+#
+# This is a Nagios check for the Event Queue heartbeat. Here's how it works:
+#
+# 1. Each Nagios poller should run a */5 cronjob that puts an event in the
+#    queue. We call this the 'heartbeat event' which should include:
+#
+#    source = the poller's hostname
+#    type   = HEARTBEAT
+#    stage  = ACTIVE
+#    date   = the event's date (YYYY-mm-dd)
+#    time   = the event's time (HH:MM:SS)
+#
+# 2. The Event Queue REST API receives the event and does:
+#
+#    a. Find if the HEARTBEAT event already exists from this source.
+#       -> If not, create the event with count=1 and handled=1 (IGNORE).
+#       -> If yes, increment the counter by 1 and update the ts field.
+#    b. Mark the state as ACTIVE.
+#    c. All other fields can be NULL or empty ("").
+#
+# 3. Finally, this Nagios check will:
+#
+#    a. Search the Event Queue for all HEARTBEAT and ACTIVE events:
+#    b. For all the returned sources.
+#       -> If ts is older than the critical threshold, produce a critical for
+#          source.
+#       -> If ts is older than the warning threshold, produce a warning for
+#          source.
+#       -> Otherwise return OK
+#
+# This Nagios check should be active on all EQ master servers.
+#
+# Author: Jorge Morgado <jorge (at) morgado (dot) ch>
+# Version 1.0, 20140901
+#
+
+# Warning and critical thresholds (in minutes)
+WARN=10
+CRIT=60
+
+# Nagios exit codes
+OK=0
+WARNING=1
+CRITICAL=2
+
+# Go to the first heartbeat event in the queue
+q.first_heartbeat()
+
+# TODO This check could be improved by not exiting immediately after the first
+# warning or critical status, but rather by reporting all missing heartbeats.
+
+# Heartbeat counter
+hb = 0
+
+while q.event is not None:
+    if q.event.state() == 'ACTIVE':
+        hb = hb + 1
+
+        # Get event's age and convert it to minutes
+        age = q.age() / 60
+
+        if age > CRIT:
+            print("CRIT: Event queue heartbeat is CRITICAL for %s." % q.event.source())
+            exit(CRITICAL)
+        if age > WARN:
+            print("WARN: Event queue heartbeat is WARNING for %s." % q.event.source())
+            exit(WARNING)
+
+    # Get the next event in the queue
+    q.next()
+
+print("OK: %d event queue heartbeats received in the last %d minutes." % (hb, WARN))
+exit(OK)
