@@ -2,7 +2,7 @@
 
 Event Queue (EQ) is an application designed to collect events from different sources and process them in sequence. Think of it as a First-In-First-Out (FIFO) queue - older events will be processed first.
 
-In addition, when processing events, the EQ also offers a mechanism to handle the events in different ways. This is archived using the ```q``` (pseudo) scripting language (more details below).
+In addition, when processing events, the EQ also offers a mechanism to handle the events in different ways. This is achived using the ```q``` (pseudo) scripting language (more details below).
 
 It was mostly designed for Nagios (and clones) but can also be used to feed events from other systems.
 
